@@ -42,12 +42,14 @@ app.get("/:chapter", async (req, res) => {
     const links = $(`.episodes-card-title h3 a`)
       .get()
       .map((val) => $(val).attr("href"));
+    // console.log(links);
     const { data: getLink } = await axios.get(links[ep - 1]);
     const $1 = Cheerio.load(getLink);
-    const epLinks = $1(`ul.nav-tabs li a[data-ep-url]`).get();
+    console.log(!!$1);
+    const epLinks = $1(`ul.nav-tabs li a`)
+      .get()
+      .map((val) => $1(val).attr("data-ep-url"));
     console.log(epLinks, "first return ");
-
-    // Store response in cache
 
     const fetchAnother = async () => {
       if (!epLinks.length) {
@@ -66,7 +68,7 @@ app.get("/:chapter", async (req, res) => {
       return epLinks;
     };
 
-    console.log(await fetchAnother());
+    // console.log(await fetchAnother());
     cache.set(url, await fetchAnother(), 86400 * 5);
     res.status(200).json({ data: await fetchAnother() });
   } catch (error) {
