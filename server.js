@@ -20,13 +20,20 @@ app.get("/:chapter", async (req, res) => {
   const { ep } = req.query;
 
   async function title(chapter) {
+    let originalTitle = chapter;
+    if (chapter === "BLUELOCK") {
+      originalTitle = "blue lock";
+    }
+    if (chapter === "JUJUTSU KAISEN") {
+      originalTitle = "JUJUTSU KAISEN tv";
+    }
     const filter = /[^a-zA-Z0-9?!]/g;
     const composedTitle = chapter.replace(filter, "-");
     return composedTitle.toLowerCase();
   }
   const titleIs = await title(chapter);
   console.log(titleIs);
-  const url = `https://com.cloud-anime.com/anime/${titleIs}`;
+  let url = `https://com.cloud-anime.com/anime/${titleIs}`;
   console.log(url, "I am url");
 
   // Check if response is already cached
@@ -38,14 +45,22 @@ app.get("/:chapter", async (req, res) => {
 
   try {
     const { data } = await axios.get(url);
-    const $ = Cheerio.load(data);
+    let trueData = data;
+    // console.log(!!data);
+    // if (!!data) {
+    //   console.log("condition has started of data");
+    //   url = `https://com.cloud-anime.com/anime/${titleIs}-tv`;
+    //   console.log(url, "second url");
+    //   const { data: dataS } = await axios.get(url);
+    //   trueData = dataS;
+    // }
+    const $ = Cheerio.load(trueData);
     const links = $(`.episodes-card-title h3 a`)
       .get()
       .map((val) => $(val).attr("href"));
     // console.log(links);
     const { data: getLink } = await axios.get(links[ep - 1]);
     const $1 = Cheerio.load(getLink);
-    console.log(!!$1);
     const epLinks = $1(`ul.nav-tabs li a`)
       .get()
       .map((val) => $1(val).attr("data-ep-url"));
