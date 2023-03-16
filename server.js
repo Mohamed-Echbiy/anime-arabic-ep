@@ -45,27 +45,17 @@ app.get("/:title", async (req, res) => {
       .map((L) => {
         const link = $1(L).attr("data-ep-url");
         if (!!link) {
-          return {
-            link,
-            serverName: $1(L).text(),
-            quality: $1(L).find("small").text(),
-          };
+          return link;
         }
         return;
         //
       });
     const data = streaming_Links.filter((F) => F !== undefined);
-    const sd = data.filter((sd) => sd.quality === "SD");
-    const hd = data.filter((hd) => hd.quality === "HD");
-    const fhd = data.filter((fhd) => fhd.quality === "FHD");
+
     console.log(data);
-    cache.set(url, { data: { sd, hd, fhd } }, 186400 * 4);
+    cache.set(url, { data: data }, 186400 * 4);
     res.status(200).json({
-      data: {
-        sd,
-        hd,
-        fhd,
-      },
+      data: data,
     });
   } catch (error) {
     res.status(404).json({ message: error.message });
