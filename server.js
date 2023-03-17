@@ -53,7 +53,7 @@ app.get("/:title", async (req, res) => {
     const data = streaming_Links.filter((F) => F !== undefined);
 
     console.log(data);
-    cache.set(url, { data: data }, 186400 * 4);
+    cache.set(url, { data: data, ep: ep - 1 }, 60);
     res.status(200).json({
       data: data,
     });
