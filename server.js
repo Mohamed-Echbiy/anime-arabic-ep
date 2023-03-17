@@ -23,11 +23,11 @@ app.get("/:title", async (req, res) => {
 
   // Check if response is already cached
   const url = `https://animelek.me/anime/${title}`;
-  const cachedResponse = cache.get(url);
-  if (cachedResponse) {
-    console.log("Returning cached response");
-    return res.status(200).json({ data: cachedResponse });
-  }
+  // const cachedResponse = cache.get(url);
+  // if (cachedResponse) {
+  //   console.log("Returning cached response");
+  //   return res.status(200).json({ data: cachedResponse });
+  // }
 
   try {
     console.log(url);
@@ -53,7 +53,7 @@ app.get("/:title", async (req, res) => {
     const data = streaming_Links.filter((F) => F !== undefined);
 
     console.log(data);
-    cache.set(url, { data: data, ep: ep - 1 }, 60);
+    // cache.set(url, { data: data, ep: ep - 1 }, 60);
     res.status(200).json({
       data: data,
     });
