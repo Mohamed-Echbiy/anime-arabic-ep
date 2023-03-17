@@ -35,6 +35,7 @@ app.get("/:title", async (req, res) => {
     const $ = cheerio.load(html);
     const episodes_Links = $(".episodes-card h3 a")
       .get()
+      .sort()
       .map((v) => $(v).attr("href"));
     const episodePage = episodes_Links[+ep - 1];
     // after getting the url of the site and let extract the streming url
