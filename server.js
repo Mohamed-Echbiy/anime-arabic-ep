@@ -41,8 +41,10 @@ app.get("/:title", async (req, res) => {
         const getStreamLinks = $(`#episode-servers li a`)
           .get()
           .map((vl) => $(vl).attr("data-ep-url"));
+        console.log(getStreamLinks);
         return res.status(200).json({ data: getStreamLinks.slice(1) });
       } catch (error) {
+        console.log(error.message);
         return res.status(404).json({ message: error.message });
       }
     }
