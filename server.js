@@ -30,6 +30,23 @@ app.get("/:title", async (req, res) => {
   // }
 
   try {
+    console.log("the try is started");
+    if (title === "one-piece") {
+      try {
+        console.log("the condition is true");
+        const url_one_piece = `https://witanime.com/episode/one-piece-%d8%a7%d9%84%d8%ad%d9%84%d9%82%d8%a9-${ep}/`;
+        console.log(url_one_piece);
+        const { data: html_One_Piece } = await axios(url_one_piece);
+        const $ = cheerio.load(html_One_Piece);
+        const getStreamLinks = $(`#episode-servers li a`)
+          .get()
+          .map((vl) => $(vl).attr("data-ep-url"));
+        return res.status(200).json({ data: getStreamLinks.slice(1) });
+      } catch (error) {
+        return res.status(404).json({ message: error.message });
+      }
+    }
+    console.log("we skipped the condition");
     console.log(url);
     const { data: html } = await axios(url);
     const $ = cheerio.load(html);
